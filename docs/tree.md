@@ -25,13 +25,14 @@ BouVideoServ/
 │  ├─ index.html
 │  └─ styles.css
 ├─ docs/
-│  ├─ install.md
-│  ├─ usage.md
 │  ├─ architecture.md
 │  ├─ about.md
 │  ├─ rtmp-ingest.md
 │  ├─ v1-rtmp.md
 │  └─ tree.md
+├─ tutorials/
+│  ├─ install.md
+│  └─ usage.md
 ├─ wiki/
 │  ├─ Home.md
 │  ├─ _Sidebar.md
