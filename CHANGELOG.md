@@ -2,30 +2,25 @@
 
 All notable changes to BouVideoServ are documented in this file.
 
-## [v0.1.1] - 2026-08-26
+## [v0.1.3] - 2026-08-26
 
 ### Added
 
-- version section in all README entry points
-- changelog tracking for the project
-- version badge in the README files
-- clearer about page for the public repository
-- Windows and Linux launch scripts
-- Windows and Linux build scripts
-- RTMP source examples for OBS and other clients
-- GitHub issue, pull request, and funding templates
-- RTMP engine scaffold with MediaMTX config generation
-- engine status visibility in the web UI
-- local dashboards and configuration pages in French
+- installation guide for Windows and Linux
+- usage guide for the local web interface and RTMP intake
+- a wiki-ready documentation structure in the repository
+- a more polished local about page
+- first published GitHub wiki pages
 
 ### Changed
 
-- improved the project documentation structure
-- clarified the V1 scope around RTMP ingestion and local configuration
-- aligned the top-level README with the multilingual docs
+- README files now point to install and usage docs
+- version badges and version sections now reflect `v0.1.3`
+- onboarding flow is easier to follow for new contributors
+- wiki links now point to the published GitHub wiki
 
 ### Notes
 
-- `v0.1.0` was the initial public scaffold.
-- `v0.1.1` is the first patch that expands the docs and public repo setup.
-- Future versions will be tracked here as the project evolves.
+- `v0.1.1` documented the version badge and changelog baseline.
+- `v0.1.2` expanded the public docs and onboarding material.
+- `v0.1.3` publishes the wiki and finishes the onboarding pass.

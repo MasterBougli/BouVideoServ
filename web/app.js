@@ -1,6 +1,7 @@
 const form = document.getElementById("configForm");
 const status = document.getElementById("status");
 const openDashboard = document.getElementById("openDashboard");
+const openAbout = document.getElementById("openAbout");
 const saveButton = document.getElementById("saveConfig");
 const engineStatus = document.getElementById("engineStatus");
 const rtmpSources = document.getElementById("rtmpSources");
@@ -113,6 +114,12 @@ async function saveConfig() {
 openDashboard.addEventListener("click", () => {
   window.open("/dashboard.html", "bouvideoserv-dashboard");
 });
+
+if (openAbout) {
+  openAbout.addEventListener("click", () => {
+    window.open("/about.html", "bouvideoserv-about");
+  });
+}
 
 saveButton.addEventListener("click", async () => {
   try {

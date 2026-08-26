@@ -19,21 +19,29 @@ BouVideoServ/
 │     └─ config.go
 ├─ web/
 │  ├─ app.js
+│  ├─ about.html
 │  ├─ dashboard.html
 │  ├─ dashboard.js
 │  ├─ index.html
 │  └─ styles.css
 ├─ docs/
+│  ├─ install.md
+│  ├─ usage.md
 │  ├─ architecture.md
 │  ├─ about.md
 │  ├─ rtmp-ingest.md
 │  ├─ v1-rtmp.md
 │  └─ tree.md
+├─ wiki/
+│  ├─ Home.md
+│  ├─ _Sidebar.md
+│  ├─ Installation.md
+│  └─ Utilisation.md
 ├─ scripts/
-│  ├─ scripts/build-linux.sh
-│  ├─ scripts/build-windows.ps1
-│  ├─ scripts/start-linux.sh
-│  └─ scripts/start-windows.ps1
+│  ├─ build-linux.sh
+│  ├─ build-windows.ps1
+│  ├─ start-linux.sh
+│  └─ start-windows.ps1
 ├─ CONTRIBUTING.md
 ├─ CODE_OF_CONDUCT.md
 ├─ DCO.md

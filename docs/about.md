@@ -1,16 +1,23 @@
 # About BouVideoServ
 
-BouVideoServ is being built as a practical local streaming platform for
-camera feeds and live sources.
+BouVideoServ is a practical local streaming platform for camera feeds and
+live sources.
 
-## Project direction
+## What it is
 
-- start with RTMP ingestion
-- keep the local configuration clear and simple
-- support at least 3 cameras from the beginning
-- preserve a small buffer for near-live workflows
-- record streams for a configurable period
-- keep the project LAN-focused for V1
+- a local video server for LAN use
+- a simple configuration tool for live sources
+- a future-ready base for RTSP, WebRTC, and HLS
+- a project designed for Windows and Linux first
+
+## What the first version does
+
+- receives RTMP streams
+- saves the configuration locally
+- keeps a 30-second buffer target
+- keeps recordings for 24 hours
+- shows the engine status in the web UI
+- exposes sample RTMP URLs for OBS and other senders
 
 ## Why this structure
 
@@ -20,7 +27,7 @@ remains available for encoding, recording, and future conversions.
 
 ## Roadmap
 
-- V1: RTMP ingest + configuration
+- V1: RTMP ingest and configuration
 - V2: RTSP support
 - V3: WebRTC playback
 - V4: HLS support
@@ -29,4 +36,3 @@ remains available for encoding, recording, and future conversions.
 ## Support
 
 - [Donation Streamlabs](https://streamlabs.com/bouglitv)
-
