@@ -5,6 +5,7 @@
 - Verifie que le moteur RTMP est actif
 - Verifie que la machine est accessible sur le reseau local
 - Verifie qu'OBS ou la camera publie vers la bonne URL
+- Verifie que le serveur Rust est lance correctement
 
 ## Exemple d'envoi
 
@@ -22,4 +23,3 @@ rtmp://127.0.0.1:1935/camera1
 ## Support
 
 - [Donation Streamlabs](https://streamlabs.com/bouglitv)
-

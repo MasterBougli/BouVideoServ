@@ -5,18 +5,16 @@ Structure actuelle du depot:
 ```text
 BouVideoServ/
 ├─ CHANGELOG.md
+├─ Cargo.toml
 ├─ README.md
 ├─ README.fr.md
 ├─ README.es.md
-├─ cmd/
-│  └─ bouvideoserv/
-│     └─ main.go
-├─ internal/
-│  ├─ app/
-│  │  ├─ server.go
-│  │  └─ state.go
-│  └─ config/
-│     └─ config.go
+├─ src/
+│  ├─ lib.rs
+│  ├─ main.rs
+│  ├─ config.rs
+│  ├─ mediamtx.rs
+│  └─ state.rs
 ├─ web/
 │  ├─ app.js
 │  ├─ about.html
@@ -50,7 +48,7 @@ BouVideoServ/
 ├─ DCO.md
 ├─ LICENSE
 ├─ .gitignore
-└─ go.mod
+└─ mediamtx.yml
 ```
 
 ## Support

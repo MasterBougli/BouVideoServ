@@ -5,9 +5,9 @@ Set-Location $root
 
 New-Item -ItemType Directory -Force -Path (Join-Path $root "bin") | Out-Null
 
-if (-not (Get-Command go -ErrorAction SilentlyContinue)) {
-    throw "Go is required to build BouVideoServ."
+if (-not (Get-Command cargo -ErrorAction SilentlyContinue)) {
+    throw "Rust et Cargo sont requis pour construire BouVideoServ."
 }
 
-go build -o bin/bouvideoserv.exe ./cmd/bouvideoserv
-
+cargo build --release --bin bouvideoserv
+Copy-Item -Force -Path (Join-Path $root "target/release/bouvideoserv.exe") -Destination (Join-Path $root "bin/bouvideoserv.exe")

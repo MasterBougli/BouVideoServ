@@ -22,8 +22,9 @@ live sources.
 ## Why this structure
 
 The goal is to keep the media path efficient while avoiding a heavy stack.
-MediaMTX handles the media routing, Go handles the control layer, and FFmpeg
-remains available for encoding, recording, and future conversions.
+MediaMTX handles the media routing, Rust handles the control layer with Axum
+and Tokio, and FFmpeg remains available for encoding, recording, and future
+conversions.
 
 ## Roadmap
 

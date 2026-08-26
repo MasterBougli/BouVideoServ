@@ -2,6 +2,19 @@
 
 All notable changes to BouVideoServ are documented in this file.
 
+## [v0.2.0] - 2026-08-26
+
+### Changed
+
+- rewrote the server bootstrap and control layer in Rust
+- replaced the old server project structure with a Rust project layout
+- updated the build and launch scripts to use Cargo
+- version badges and version sections now reflect `v0.2.0`
+
+### Notes
+
+- `v0.2.0` marks the backend language transition to Rust.
+
 ## [v0.1.6] - 2026-08-26
 
 ### Changed

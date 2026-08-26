@@ -36,11 +36,10 @@ if ($AppBinary) {
     exit $LASTEXITCODE
 }
 
-if (Get-Command go -ErrorAction SilentlyContinue) {
-    Write-Host "Starting BouVideoServ with go run"
-    go run ./cmd/bouvideoserv
+if (Get-Command cargo -ErrorAction SilentlyContinue) {
+    Write-Host "Starting BouVideoServ with cargo run"
+    cargo run --bin bouvideoserv
     exit $LASTEXITCODE
 }
 
-throw "BouVideoServ binary not found and Go is not installed. Place bin/bouvideoserv.exe or install Go."
-
+throw "BouVideoServ binary not found and Rust/Cargo are not installed. Place bin/bouvideoserv.exe or install Rust."

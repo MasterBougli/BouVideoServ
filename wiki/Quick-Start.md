@@ -5,7 +5,7 @@ Ce guide rassemble le chemin le plus court pour lancer BouVideoServ en local.
 ## Avant de commencer
 
 - Windows ou Linux
-- un binaire `BouVideoServ`
+- Rust et Cargo
 - un binaire `MediaMTX`
 - au moins une source RTMP, par exemple OBS
 
@@ -13,14 +13,14 @@ Ce guide rassemble le chemin le plus court pour lancer BouVideoServ en local.
 
 ### Windows
 
-1. place `bouvideoserv.exe` dans `bin/`
+1. lance `scripts/build-windows.ps1`
 2. place `mediamtx.exe` dans `bin/`
 3. lance `scripts/start-windows.ps1`
 4. ouvre l'interface locale depuis l'adresse affichee dans la console
 
 ### Linux
 
-1. place `bouvideoserv` dans `bin/`
+1. lance `scripts/build-linux.sh`
 2. place `mediamtx` dans `bin/`
 3. lance `scripts/start-linux.sh`
 4. ouvre l'interface locale depuis l'adresse affichee dans la console
@@ -51,4 +51,3 @@ rtmp://127.0.0.1:1935/camera1
 - [Utilisation](Utilisation.md)
 - [Architecture](../docs/architecture.md)
 - [Perimetre V1 RTMP](../docs/v1-rtmp.md)
-

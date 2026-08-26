@@ -15,11 +15,10 @@ if [ -x "$ROOT/bin/bouvideoserv" ]; then
   exec "$ROOT/bin/bouvideoserv"
 fi
 
-if command -v go >/dev/null 2>&1; then
-  echo "Starting BouVideoServ with go run"
-  exec go run ./cmd/bouvideoserv
+if command -v cargo >/dev/null 2>&1; then
+  echo "Starting BouVideoServ with cargo run"
+  exec cargo run --bin bouvideoserv
 fi
 
-echo "BouVideoServ binary not found and Go is not installed. Place bin/bouvideoserv or install Go." >&2
+echo "BouVideoServ binary not found and Rust/Cargo are not installed. Place bin/bouvideoserv or install Rust." >&2
 exit 1
-

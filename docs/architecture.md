@@ -12,15 +12,17 @@ BouVideoServ est organise en trois couches.
 
 ## 2. Couche controle
 
-- Le binaire Go fournit l'interface web locale
+- Le binaire Rust fournit l'interface web locale
 - La configuration est stockee en JSON
 - Les reglages initiaux concernent le cache, l'enregistrement et les sources
+- Axum et Tokio gerent la couche serveur
 
 ## 3. Couche traitement
 
 - FFmpeg sera utilise pour les traitements audio/video, l'enregistrement et les
   futures conversions
 - La V1 vise la simplicite et la compatibilite avant tout
+- La V1 conserve une interface simple et un demarrage local rapide
 
 ## Contraintes de la V1
 
@@ -33,4 +35,3 @@ BouVideoServ est organise en trois couches.
 ## Support
 
 - [Donation Streamlabs](https://streamlabs.com/bouglitv)
-
