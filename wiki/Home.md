@@ -7,6 +7,7 @@ Bienvenue dans la base wiki de BouVideoServ.
 - [Demarrage rapide](Quick-Start.md)
 - [Installation](Installation.md)
 - [Utilisation](Utilisation.md)
+- [Profil LAN](https://github.com/MasterBougli/BouVideoServ/blob/main/web/lan.html)
 - [Architecture](https://github.com/MasterBougli/BouVideoServ/blob/main/docs/architecture.md)
 - [RTMP ingest](https://github.com/MasterBougli/BouVideoServ/blob/main/docs/rtmp-ingest.md)
 - [Structure de developpement](https://github.com/MasterBougli/BouVideoServ/blob/main/docs/development.md)

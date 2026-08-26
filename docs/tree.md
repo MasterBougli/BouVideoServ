@@ -19,6 +19,8 @@ BouVideoServ/
 │  ├─ app.js
 │  ├─ camera.html
 │  ├─ camera.js
+│  ├─ lan.html
+│  ├─ lan.js
 │  ├─ about.html
 │  ├─ dashboard.html
 │  ├─ dashboard.js

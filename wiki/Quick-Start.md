@@ -43,6 +43,7 @@ rtmp://127.0.0.1:1935/camera1
 - la page de configuration
 - le bouton pour ouvrir le tableau de bord
 - le bouton pour ouvrir l'ecran de connexion camera
+- le bouton pour ouvrir le profil LAN
 - l'etat du moteur RTMP
 - les liens vers les exemples d'entree
 

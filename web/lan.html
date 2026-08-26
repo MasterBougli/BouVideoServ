@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BouVideoServ - Profil LAN</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="lan-body">
+    <main class="lan-shell">
+      <section class="hero hero--config">
+        <div class="hero-copy">
+          <p class="eyebrow">Profil LAN</p>
+          <h1>Adresse locale et liens rapides</h1>
+          <p class="lead">
+            Cette page detecte l'adresse vue par le navigateur et regroupe les
+            liens utiles pour ouvrir l'interface, le dashboard et les flux RTMP.
+          </p>
+          <div id="lanStatus" class="status-pill">Detection de l'adresse locale...</div>
+          <div class="actions">
+            <a class="primary" href="/" target="_blank" rel="noreferrer">Retour configuration</a>
+            <a class="secondary" href="/dashboard.html" target="_blank" rel="noreferrer">Tableau de bord</a>
+            <a class="secondary" href="/camera.html" target="_blank" rel="noreferrer">Connexion camera</a>
+          </div>
+        </div>
+        <div class="hero-aside">
+          <div class="hero-badge">LAN</div>
+          <h2>Partage simple sur le reseau local</h2>
+          <p>
+            Ouvre cette page depuis une machine du LAN pour verifier rapidement
+            quelle adresse partager aux autres postes.
+          </p>
+        </div>
+      </section>
+
+      <section class="lan-grid">
+        <article class="lan-card">
+          <p class="eyebrow eyebrow--small">Detection</p>
+          <h2>Adresse visible</h2>
+          <p id="lanHost" class="lan-note"></p>
+          <div class="lan-copy-row">
+            <code id="lanOrigin">-</code>
+            <button id="copyLanOrigin" type="button" class="copy-button">Copier</button>
+          </div>
+          <p class="lan-note">
+            Si la page est ouverte en local, l'adresse affichee correspond a la
+            machine de consultation.
+          </p>
+        </article>
+
+        <article class="lan-card">
+          <p class="eyebrow eyebrow--small">Liens rapides</p>
+          <h2>Acces principaux</h2>
+          <ul id="lanLinks" class="lan-link-list"></ul>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow eyebrow--small">Guide rapide</p>
+            <h2>Comment s'en servir</h2>
+          </div>
+          <p>Une aide courte pour le reseau local, sans alourdir l'interface.</p>
+        </div>
+        <ol id="lanSteps" class="steps"></ol>
+      </section>
+    </main>
+
+    <script src="/lan.js" type="module"></script>
+  </body>
+</html>

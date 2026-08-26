@@ -19,6 +19,24 @@ All notable changes to BouVideoServ are documented in this file.
 
 - `v0.2.1` focuses on the first polished local UX for configuration and camera onboarding.
 
+## [v0.2.2] - 2026-08-26
+
+### Added
+
+- a camera-by-camera editor in the main configuration screen
+- a first LAN profile page with local address detection and quick links
+- clearer online and offline states in the dashboard mosaic
+
+### Changed
+
+- README badges and version sections now reflect `v0.2.2`
+- the configuration form now uses dedicated camera cards instead of one shared text area
+- the dashboard now shows more visible stream state feedback
+
+### Notes
+
+- `v0.2.2` focuses on making the V1 easier to configure and easier to read at a glance.
+
 ## [v0.2.0] - 2026-08-26
 
 ### Changed

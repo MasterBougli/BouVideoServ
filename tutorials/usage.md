@@ -13,11 +13,12 @@ Tu verras:
 - les exemples d'entree RTMP
 - le bouton pour ouvrir le tableau de bord
 - le bouton pour ouvrir l'ecran de connexion camera
+- le bouton pour ouvrir le profil LAN
 
 ## Configurer une camera
 
 1. Ouvre la page de configuration
-2. Renseigne la camera dans la liste des flux
+2. Renseigne les cameras dans les cartes dediees
 3. Sauvegarde la configuration
 4. Branche la source RTMP sur l'URL proposee
 
@@ -42,6 +43,11 @@ arrivera plus tard avec les evolutions RTSP, WebRTC et HLS.
 
 Le bouton `Connexion camera` ouvre un ecran dedie avec les URLs RTMP a copier
 dans OBS ou dans un encodeur externe.
+
+## Profil LAN
+
+Le bouton `Profil LAN` ouvre une page qui detecte l'adresse vue par le
+navigateur et regroupe les liens utiles pour le reseau local.
 
 ## Conservation
 

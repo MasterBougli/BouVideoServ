@@ -20,6 +20,7 @@
           <div class="actions">
             <button id="openDashboard" class="primary">Ouvrir le tableau de bord</button>
             <button id="openCameraSetup" class="secondary">Connexion camera</button>
+            <button id="openLanProfile" class="secondary">Profil LAN</button>
             <button id="openAbout" class="secondary">A propos</button>
             <a class="secondary" href="https://streamlabs.com/bouglitv" target="_blank" rel="noreferrer">
               Soutenir le projet
@@ -82,10 +83,19 @@
               Minimum camera
               <input name="minimumCameraCount" type="number" min="1" />
             </label>
-            <label class="wide">
-              Cameras de base
-              <textarea name="streams" rows="6"></textarea>
-            </label>
+            <div class="wide stream-editor-wrap">
+              <div class="stream-editor-head">
+                <div>
+                  <p class="eyebrow eyebrow--small">Cameras</p>
+                  <h3>Cameras une par une</h3>
+                  <p class="muted">
+                    Chaque carte represente une camera ou un encodeur RTMP.
+                  </p>
+                </div>
+                <button id="addCameraStream" type="button" class="secondary">Ajouter une camera</button>
+              </div>
+              <div id="streamEditor" class="stream-editor"></div>
+            </div>
           </fieldset>
 
           <fieldset class="fieldset">
