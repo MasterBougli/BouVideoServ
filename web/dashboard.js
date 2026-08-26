@@ -37,7 +37,7 @@ async function loadTiles() {
     tiles.appendChild(
       createTile(
         stream.name || "Flux",
-        stream.sourceUrl ? "Flux configure" : "Source a definir",
+        stream.sourceUrl ? "Flux configuré" : "Source à définir",
       ),
     );
   }

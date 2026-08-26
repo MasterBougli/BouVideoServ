@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BouVideoServ - Connexion camera</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="camera-body">
+    <main class="camera-shell">
+      <section class="hero hero--config">
+        <div class="hero-copy">
+          <p class="eyebrow">Connexion camera</p>
+          <h1>Brancher une source RTMP</h1>
+          <p class="lead">
+            Ecran dedie pour preparer OBS, une camera ou un encodeur externe.
+            Les liens sont generates depuis la configuration locale.
+          </p>
+          <div id="cameraStatus" class="status-pill">Chargement des sources...</div>
+          <div class="actions">
+            <a class="primary" href="/" target="_blank" rel="noreferrer">Retour configuration</a>
+            <a class="secondary" href="/dashboard.html" target="_blank" rel="noreferrer">Ouvrir le tableau de bord</a>
+          </div>
+        </div>
+        <div class="hero-aside">
+          <div class="hero-badge">RTMP</div>
+          <h2>Le plus simple possible</h2>
+          <p>
+            Un flux par camera, une URL claire, et une consigne courte pour
+            garder l'installation lisible.
+          </p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow eyebrow--small">Plan de connexion</p>
+            <h2>Sources a configurer</h2>
+          </div>
+          <p>Chaque carte peut etre copiee directement vers OBS ou un autre client RTMP.</p>
+        </div>
+        <div id="cameraCards" class="camera-grid"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow eyebrow--small">Guide rapide</p>
+            <h2>Premiers pas</h2>
+          </div>
+          <p>Une base simple pour lancer la premiere camera sans perdre de temps.</p>
+        </div>
+        <ol id="cameraSteps" class="camera-steps"></ol>
+      </section>
+    </main>
+
+    <script src="/camera.js" type="module"></script>
+  </body>
+</html>

@@ -12,6 +12,7 @@ Tu verras:
 - l'etat du moteur RTMP
 - les exemples d'entree RTMP
 - le bouton pour ouvrir le tableau de bord
+- le bouton pour ouvrir l'ecran de connexion camera
 
 ## Configurer une camera
 
@@ -37,6 +38,11 @@ Le tableau de bord sert pour la vue mosaïque des flux.
 La V1 affiche surtout une structure de tableau de bord, le flux video complet
 arrivera plus tard avec les evolutions RTSP, WebRTC et HLS.
 
+## Connexion camera
+
+Le bouton `Connexion camera` ouvre un ecran dedie avec les URLs RTMP a copier
+dans OBS ou dans un encodeur externe.
+
 ## Conservation
 
 - Cache cible: 30 secondes
@@ -45,4 +51,3 @@ arrivera plus tard avec les evolutions RTSP, WebRTC et HLS.
 ## Support
 
 - [Donation Streamlabs](https://streamlabs.com/bouglitv)
-

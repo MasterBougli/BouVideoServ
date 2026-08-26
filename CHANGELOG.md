@@ -2,6 +2,23 @@
 
 All notable changes to BouVideoServ are documented in this file.
 
+## [v0.2.1] - 2026-08-26
+
+### Added
+
+- a dedicated camera connection screen with copyable RTMP URLs
+- a richer config overview backed by Rust endpoints
+- a more polished dashboard and main configuration layout
+
+### Changed
+
+- README badges and version sections now reflect `v0.2.1`
+- the Rust control layer now exposes summary and camera-plan routes
+
+### Notes
+
+- `v0.2.1` focuses on the first polished local UX for configuration and camera onboarding.
+
 ## [v0.2.0] - 2026-08-26
 
 ### Changed

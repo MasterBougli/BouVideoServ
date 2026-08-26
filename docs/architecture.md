@@ -16,6 +16,7 @@ BouVideoServ est organise en trois couches.
 - La configuration est stockee en JSON
 - Les reglages initiaux concernent le cache, l'enregistrement et les sources
 - Axum et Tokio gerent la couche serveur
+- Des routes dediees exposent le resume de configuration et le plan camera
 
 ## 3. Couche traitement
 

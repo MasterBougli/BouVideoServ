@@ -17,6 +17,8 @@ BouVideoServ/
 │  └─ state.rs
 ├─ web/
 │  ├─ app.js
+│  ├─ camera.html
+│  ├─ camera.js
 │  ├─ about.html
 │  ├─ dashboard.html
 │  ├─ dashboard.js

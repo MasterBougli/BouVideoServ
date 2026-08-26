@@ -7,6 +7,7 @@ live sources.
 
 - a local video server for LAN use
 - a simple configuration tool for live sources
+- a dedicated camera connection screen for the first setup step
 - a future-ready base for RTSP, WebRTC, and HLS
 - a project designed for Windows and Linux first
 

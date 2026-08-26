@@ -8,74 +8,101 @@
   </head>
   <body>
     <main class="shell">
-      <section class="hero">
-        <p class="eyebrow">BouVideoServ</p>
-        <h1>Configuration locale du serveur video</h1>
-        <p class="lead">
-          Base V1 pour reception RTMP, cache court, enregistrement et
-          preparation du futur dashboard.
-        </p>
-        <p id="engineStatus" class="engine-status">Verification du moteur...</p>
-        <div class="actions">
-          <button id="openDashboard" class="primary">Ouvrir le tableau de bord</button>
-          <button id="openAbout" class="secondary">A propos</button>
-          <a class="secondary" href="https://streamlabs.com/bouglitv" target="_blank" rel="noreferrer">
-            Soutenir le projet
-          </a>
+      <section class="hero hero--config">
+        <div class="hero-copy">
+          <p class="eyebrow">BouVideoServ</p>
+          <h1>Configuration locale du serveur video</h1>
+          <p class="lead">
+            Base V1 pour reception RTMP, cache court, enregistrement et
+            preparation du futur dashboard.
+          </p>
+          <p id="engineStatus" class="engine-status">Verification du moteur...</p>
+          <div class="actions">
+            <button id="openDashboard" class="primary">Ouvrir le tableau de bord</button>
+            <button id="openCameraSetup" class="secondary">Connexion camera</button>
+            <button id="openAbout" class="secondary">A propos</button>
+            <a class="secondary" href="https://streamlabs.com/bouglitv" target="_blank" rel="noreferrer">
+              Soutenir le projet
+            </a>
+          </div>
+        </div>
+        <div class="hero-aside">
+          <div class="hero-badge">RTMP V1</div>
+          <h2>Serveur local, leger et lisible</h2>
+          <p>
+            L'interface regroupe la configuration, les cameras et les aides de
+            demarrage dans un seul espace simple.
+          </p>
         </div>
       </section>
 
+      <section id="summaryCards" class="summary-grid"></section>
+
       <section class="panel">
         <div class="panel-header">
-          <h2>Configuration</h2>
-          <p>Les valeurs sont sauvegardees localement dans `data/config.json`.</p>
+          <div>
+            <p class="eyebrow eyebrow--small">Parametres</p>
+            <h2>Configuration</h2>
+          </div>
+          <p>Les valeurs sont sauvegardees localement dans <code>data/config.json</code>.</p>
         </div>
 
         <form id="configForm" class="grid">
-          <label>
-            Nom du projet
-            <input name="projectName" type="text" />
-          </label>
-          <label>
-            Langue
-            <input name="language" type="text" />
-          </label>
-          <label>
-            Adresse d'ecoute
-            <input name="listenAddress" type="text" />
-          </label>
-          <label>
-            Mode
-            <input name="mode" type="text" />
-          </label>
-          <label>
-            Retention en heures
-            <input name="retentionHours" type="number" min="1" />
-          </label>
-          <label>
-            Buffer en secondes
-            <input name="bufferSeconds" type="number" min="1" />
-          </label>
-          <label>
-            Minimum camera
-            <input name="minimumCameraCount" type="number" min="1" />
-          </label>
-          <label>
-            Dossier enregistrement
-            <input name="recordingDirectory" type="text" />
-          </label>
-          <label>
-            Dossier cache
-            <input name="cacheDirectory" type="text" />
-          </label>
-          <label class="wide">
-            Lien donation
-            <input name="donationUrl" type="text" />
-          </label>
-          <label class="wide">
-            Cameras de base
-            <textarea name="streams" rows="6"></textarea>
-          </label>
+          <fieldset class="fieldset">
+            <legend>General</legend>
+            <label>
+              Nom du projet
+              <input name="projectName" type="text" />
+            </label>
+            <label>
+              Langue
+              <input name="language" type="text" />
+            </label>
+            <label>
+              Adresse d'ecoute
+              <input name="listenAddress" type="text" />
+            </label>
+            <label>
+              Mode
+              <input name="mode" type="text" />
+            </label>
+          </fieldset>
+
+          <fieldset class="fieldset">
+            <legend>Flux et retention</legend>
+            <label>
+              Retention en heures
+              <input name="retentionHours" type="number" min="1" />
+            </label>
+            <label>
+              Buffer en secondes
+              <input name="bufferSeconds" type="number" min="1" />
+            </label>
+            <label>
+              Minimum camera
+              <input name="minimumCameraCount" type="number" min="1" />
+            </label>
+            <label class="wide">
+              Cameras de base
+              <textarea name="streams" rows="6"></textarea>
+            </label>
+          </fieldset>
+
+          <fieldset class="fieldset">
+            <legend>Stockage</legend>
+            <label>
+              Dossier enregistrement
+              <input name="recordingDirectory" type="text" />
+            </label>
+            <label>
+              Dossier cache
+              <input name="cacheDirectory" type="text" />
+            </label>
+            <label class="wide">
+              Lien donation
+              <input name="donationUrl" type="text" />
+            </label>
+          </fieldset>
         </form>
 
         <div class="actions">
@@ -86,10 +113,24 @@
 
       <section class="panel">
         <div class="panel-header">
-          <h2>Sources RTMP</h2>
+          <div>
+            <p class="eyebrow eyebrow--small">Connexion</p>
+            <h2>Sources RTMP</h2>
+          </div>
           <p>Exemples d'entree pour OBS ou tout client RTMP.</p>
         </div>
         <ul id="rtmpSources" class="sources"></ul>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow eyebrow--small">Apercu</p>
+            <h2>Connexion camera</h2>
+          </div>
+          <p>Les 3 premiers flux sont prepares pour un usage immediat.</p>
+        </div>
+        <div id="cameraPreview" class="camera-grid"></div>
       </section>
     </main>
 

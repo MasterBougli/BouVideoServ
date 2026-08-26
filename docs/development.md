@@ -20,6 +20,7 @@ Windows first and Linux right after.
 - `src/lib.rs` for module exports
 - `Cargo.toml` for the Rust package definition
 - `web/` for the local interface
+- `web/camera.html` and `web/camera.js` for the camera onboarding screen
 - `scripts/` for Windows and Linux launch helpers
 - `tutorials/` for setup and usage guides
 - `wiki/` for Markdown wiki pages

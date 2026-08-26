@@ -25,6 +25,45 @@ pub struct EngineStatus {
     pub binary_path: String,
 }
 
+#[derive(Clone, Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ConfigSummary {
+    pub project_name: String,
+    pub language: String,
+    pub listen_address: String,
+    pub mode: String,
+    pub retention_hours: u32,
+    pub buffer_seconds: u32,
+    pub minimum_camera_count: u32,
+    pub configured_streams: usize,
+    pub active_streams: usize,
+    pub recording_directory: String,
+    pub cache_directory: String,
+    pub donation_url: String,
+}
+
+#[derive(Clone, Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CameraSlot {
+    pub index: u32,
+    pub name: String,
+    pub stream_key: String,
+    pub rtmp_url: String,
+    pub enabled: bool,
+    pub hint: String,
+}
+
+#[derive(Clone, Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CameraPlan {
+    pub protocol: String,
+    pub rtmp_port: u16,
+    pub minimum_camera_count: u32,
+    pub configured_streams: usize,
+    pub cameras: Vec<CameraSlot>,
+    pub notes: Vec<String>,
+}
+
 impl AppState {
     // new charge ou cree l'etat local de l'application.
     pub fn new(
@@ -83,6 +122,102 @@ impl AppState {
         self.media_manager.sync(&config)?;
         Ok(())
     }
+
+    // config_summary construit une vue resumee de la configuration courante.
+    pub fn config_summary(&self) -> ConfigSummary {
+        let current = self.snapshot();
+        let active_streams = current
+            .streams
+            .iter()
+            .filter(|stream| stream.enabled)
+            .count();
+
+        ConfigSummary {
+            project_name: current.project_name,
+            language: current.language,
+            listen_address: current.listen_address,
+            mode: current.mode,
+            retention_hours: current.retention_hours,
+            buffer_seconds: current.buffer_seconds,
+            minimum_camera_count: current.minimum_camera_count,
+            configured_streams: current.streams.len(),
+            active_streams,
+            recording_directory: current.recording_directory,
+            cache_directory: current.cache_directory,
+            donation_url: current.donation_url,
+        }
+    }
+
+    // camera_plan construit les URLs RTMP et les pistes de connexion pour les
+    // cameras V1.
+    pub fn camera_plan(&self) -> CameraPlan {
+        let current = self.snapshot();
+        let camera_count = current
+            .minimum_camera_count
+            .max(current.streams.len() as u32)
+            .max(3);
+        let host = self.listen_host_hint();
+        let mut cameras = Vec::with_capacity(camera_count as usize);
+
+        for index in 0..camera_count {
+            let name = current
+                .streams
+                .get(index as usize)
+                .map(|stream| stream.name.trim())
+                .filter(|name| !name.is_empty())
+                .map(|name| name.to_string())
+                .unwrap_or_else(|| format!("Camera {}", index + 1));
+            let enabled = current
+                .streams
+                .get(index as usize)
+                .map(|stream| stream.enabled)
+                .unwrap_or(true);
+            let stream_key = format!("camera{}", index + 1);
+            let rtmp_url = format!("rtmp://{}:1935/{}", host, stream_key);
+            let hint = if enabled {
+                "Pret pour OBS ou un client RTMP".to_string()
+            } else {
+                "Flux desactive dans la configuration".to_string()
+            };
+
+            cameras.push(CameraSlot {
+                index: index + 1,
+                name,
+                stream_key,
+                rtmp_url,
+                enabled,
+                hint,
+            });
+        }
+
+        CameraPlan {
+            protocol: "RTMP".to_string(),
+            rtmp_port: 1935,
+            minimum_camera_count: camera_count,
+            configured_streams: current.streams.len(),
+            cameras,
+            notes: vec![
+                "Utilise ces URLs dans OBS ou dans une camera RTMP.".to_string(),
+                "Le serveur local ecoute sur le port 1935 pour l'ingestion.".to_string(),
+                "La V1 reste volontairement simple et legere.".to_string(),
+            ],
+        }
+    }
+
+    fn listen_host_hint(&self) -> String {
+        let current = self.snapshot();
+        let address = current.listen_address.trim();
+        let host = address
+            .split_once(':')
+            .map(|(host, _)| host)
+            .unwrap_or(address);
+
+        if host.is_empty() || host == "0.0.0.0" || host == "::" {
+            "127.0.0.1".to_string()
+        } else {
+            host.to_string()
+        }
+    }
 }
 
 // health_handler renvoie un etat minimal pour les verifications de base.
@@ -98,6 +233,17 @@ pub async fn get_config_handler(State(state): State<Arc<AppState>>) -> Json<Conf
 // get_engine_handler renvoie l'etat courant du moteur MediaMTX.
 pub async fn get_engine_handler(State(state): State<Arc<AppState>>) -> Json<EngineStatus> {
     Json(state.engine_status())
+}
+
+// get_config_summary_handler renvoie les informations groupees de la
+// configuration courante.
+pub async fn get_config_summary_handler(State(state): State<Arc<AppState>>) -> Json<ConfigSummary> {
+    Json(state.config_summary())
+}
+
+// get_camera_plan_handler renvoie le plan de connexion des cameras RTMP.
+pub async fn get_camera_plan_handler(State(state): State<Arc<AppState>>) -> Json<CameraPlan> {
+    Json(state.camera_plan())
 }
 
 // save_config_handler enregistre la configuration envoyee par l'interface.

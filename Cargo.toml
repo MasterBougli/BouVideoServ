@@ -1,6 +1,6 @@
 [package]
 name = "bouvideoserv"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 
 [dependencies]
@@ -11,4 +11,3 @@ tokio = { version = "1", features = ["macros", "rt-multi-thread", "fs", "net", "
 tower-http = { version = "0.5", features = ["fs"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"] }
-
