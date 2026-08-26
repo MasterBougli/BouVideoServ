@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BouVideoServ - Configuration</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <p class="eyebrow">BouVideoServ</p>
+        <h1>Configuration locale du serveur video</h1>
+        <p class="lead">
+          Base V1 pour reception RTMP, cache court, enregistrement et
+          preparation du futur dashboard.
+        </p>
+        <div class="actions">
+          <button id="openDashboard" class="primary">Ouvrir le tableau de bord</button>
+          <a class="secondary" href="https://streamlabs.com/bouglitv" target="_blank" rel="noreferrer">
+            Soutenir le projet
+          </a>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Configuration</h2>
+          <p>Les valeurs sont sauvegardees localement dans `data/config.json`.</p>
+        </div>
+
+        <form id="configForm" class="grid">
+          <label>
+            Nom du projet
+            <input name="projectName" type="text" />
+          </label>
+          <label>
+            Langue
+            <input name="language" type="text" />
+          </label>
+          <label>
+            Adresse d'ecoute
+            <input name="listenAddress" type="text" />
+          </label>
+          <label>
+            Mode
+            <input name="mode" type="text" />
+          </label>
+          <label>
+            Retention en heures
+            <input name="retentionHours" type="number" min="1" />
+          </label>
+          <label>
+            Buffer en secondes
+            <input name="bufferSeconds" type="number" min="1" />
+          </label>
+          <label>
+            Minimum camera
+            <input name="minimumCameraCount" type="number" min="1" />
+          </label>
+          <label>
+            Dossier enregistrement
+            <input name="recordingDirectory" type="text" />
+          </label>
+          <label>
+            Dossier cache
+            <input name="cacheDirectory" type="text" />
+          </label>
+          <label class="wide">
+            Lien donation
+            <input name="donationUrl" type="text" />
+          </label>
+          <label class="wide">
+            Cameras de base
+            <textarea name="streams" rows="6"></textarea>
+          </label>
+        </form>
+
+        <div class="actions">
+          <button id="saveConfig" class="primary">Sauvegarder</button>
+          <span id="status" class="status">Pret.</span>
+        </div>
+      </section>
+    </main>
+
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>
+
