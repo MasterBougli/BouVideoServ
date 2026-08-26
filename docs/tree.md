@@ -21,6 +21,7 @@ BouVideoServ/
 │  └─ styles.css
 ├─ docs/
 │  ├─ architecture.md
+│  ├─ v1-rtmp.md
 │  └─ tree.md
 ├─ CONTRIBUTING.md
 ├─ CODE_OF_CONDUCT.md
@@ -34,4 +35,3 @@ BouVideoServ/
 ## Support
 
 - [Donation Streamlabs](https://streamlabs.com/bouglitv)
-

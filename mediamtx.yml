@@ -1,0 +1,26 @@
+logLevel: info
+logDestinations: [stdout]
+logStructured: false
+
+rtmp: true
+rtmpAddress: :1935
+rtmpEncryption: "no"
+
+rtsp: false
+hls: false
+webrtc: false
+srt: false
+moq: false
+
+pathDefaults:
+  record: yes
+  recordPath: ./recordings/%path/%Y-%m-%d_%H-%M-%S-%f
+  recordFormat: fmp4
+  recordPartDuration: 1s
+  recordSegmentDuration: 1h
+  recordDeleteAfter: 24h
+
+paths:
+  all_others:
+    source: publisher
+

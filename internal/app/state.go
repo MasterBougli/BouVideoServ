@@ -12,12 +12,13 @@ import (
 )
 
 type State struct {
-	mu         sync.Mutex
-	configPath  string
-	current     config.Config
+	mu        sync.Mutex
+	configPath string
+	current    config.Config
+	syncHook   func(config.Config) error
 }
 
-func NewState(configPath string) (*State, error) {
+func NewState(configPath string, syncHook func(config.Config) error) (*State, error) {
 	cfg, err := config.Load(configPath)
 	if err != nil {
 		if !errors.Is(err, os.ErrNotExist) {
@@ -32,6 +33,7 @@ func NewState(configPath string) (*State, error) {
 	return &State{
 		configPath: configPath,
 		current:    cfg,
+		syncHook:   syncHook,
 	}, nil
 }
 
@@ -68,10 +70,18 @@ func (s *State) handleConfig(w http.ResponseWriter, r *http.Request) {
 		s.mu.Lock()
 		s.current = cfg
 		err := config.Save(s.configPath, s.current)
+		syncHook := s.syncHook
 		s.mu.Unlock()
 		if err != nil {
 			writeError(w, http.StatusInternalServerError, "cannot save config")
 			return
+		}
+
+		if syncHook != nil {
+			if err := syncHook(cfg); err != nil {
+				writeError(w, http.StatusInternalServerError, "cannot update media engine config")
+				return
+			}
 		}
 
 		writeJSON(w, http.StatusOK, map[string]string{"status": "saved"})
@@ -102,4 +112,11 @@ func (s *State) ListenAddress() string {
 		return "127.0.0.1:8080"
 	}
 	return s.current.ListenAddress
+}
+
+func (s *State) Snapshot() config.Config {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	return s.current
 }

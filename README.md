@@ -24,6 +24,7 @@ Si tu veux soutenir le projet:
 - Couche de controle: Go
 - Traitements audio/video: FFmpeg
 - Configuration locale: fichiers JSON et interface web
+- Config MediaMTX de base: [mediamtx.yml](mediamtx.yml)
 
 ## Roadmap courte
 
@@ -36,4 +37,3 @@ Si tu veux soutenir le projet:
 
 Le projet est en cours de mise en place. Les premiers ecrans et la base de
 configuration sont ajoutes dans ce depot pour servir de socle a la V1.
-
