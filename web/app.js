@@ -3,6 +3,7 @@ const status = document.getElementById("status");
 const openDashboard = document.getElementById("openDashboard");
 const saveButton = document.getElementById("saveConfig");
 const engineStatus = document.getElementById("engineStatus");
+const rtmpSources = document.getElementById("rtmpSources");
 
 function setStatus(message) {
   status.textContent = message;
@@ -42,6 +43,24 @@ function renderStreams(streams) {
   return streams.map((stream) => `${stream.name} | ${stream.sourceUrl ?? ""}`).join("\n");
 }
 
+function renderRtmpSources(config) {
+  if (!rtmpSources) {
+    return;
+  }
+
+  const host = window.location.hostname || "127.0.0.1";
+  const minimum = Number(config.minimumCameraCount || 3);
+
+  rtmpSources.innerHTML = "";
+
+  for (let index = 1; index <= minimum; index += 1) {
+    const item = document.createElement("li");
+    item.className = "source-item";
+    item.innerHTML = `<code>rtmp://${host}:1935/camera${index}</code>`;
+    rtmpSources.appendChild(item);
+  }
+}
+
 async function loadConfig() {
   const [configResponse, engineResponse] = await Promise.all([
     fetch("/api/config"),
@@ -50,6 +69,7 @@ async function loadConfig() {
   const config = await configResponse.json();
   const engine = await engineResponse.json();
   setEngineStatus(engine);
+  renderRtmpSources(config);
 
   for (const [key, value] of Object.entries(config)) {
     const input = form.elements.namedItem(key);

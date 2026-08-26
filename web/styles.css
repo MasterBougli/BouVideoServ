@@ -134,6 +134,23 @@ button,
   gap: 16px;
 }
 
+.sources {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.source-item {
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--panel-alt);
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
 label {
   display: grid;
   gap: 8px;
