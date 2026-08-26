@@ -79,6 +79,26 @@ h1 {
   color: var(--muted);
 }
 
+.engine-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(8, 18, 30, 0.7);
+  color: var(--muted);
+}
+
+.engine-status[data-state="running"] {
+  color: var(--accent);
+}
+
+.engine-status[data-state="offline"] {
+  color: #ffcc66;
+}
+
 .actions {
   display: flex;
   gap: 12px;
@@ -195,4 +215,3 @@ textarea {
     align-items: stretch;
   }
 }
-

@@ -16,6 +16,13 @@ type State struct {
 	configPath string
 	current    config.Config
 	syncHook   func(config.Config) error
+	engine     EngineStatus
+}
+
+type EngineStatus struct {
+	Running   bool   `json:"running"`
+	Message   string `json:"message"`
+	BinaryPath string `json:"binaryPath"`
 }
 
 func NewState(configPath string, syncHook func(config.Config) error) (*State, error) {
@@ -41,6 +48,7 @@ func (s *State) Handler(webDir string) http.Handler {
 	mux := http.NewServeMux()
 	mux.Handle("/", http.FileServer(http.Dir(webDir)))
 	mux.HandleFunc("/api/config", s.handleConfig)
+	mux.HandleFunc("/api/engine", s.handleEngine)
 	mux.HandleFunc("/api/health", s.handleHealth)
 	return mux
 }
@@ -90,6 +98,14 @@ func (s *State) handleConfig(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (s *State) handleEngine(w http.ResponseWriter, _ *http.Request) {
+	s.mu.Lock()
+	engine := s.engine
+	s.mu.Unlock()
+
+	writeJSON(w, http.StatusOK, engine)
+}
+
 func writeJSON(w http.ResponseWriter, status int, payload any) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(status)
@@ -119,4 +135,11 @@ func (s *State) Snapshot() config.Config {
 	defer s.mu.Unlock()
 
 	return s.current
+}
+
+func (s *State) SetEngineStatus(status EngineStatus) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	s.engine = status
 }

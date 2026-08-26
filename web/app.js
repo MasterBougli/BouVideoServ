@@ -2,9 +2,25 @@ const form = document.getElementById("configForm");
 const status = document.getElementById("status");
 const openDashboard = document.getElementById("openDashboard");
 const saveButton = document.getElementById("saveConfig");
+const engineStatus = document.getElementById("engineStatus");
 
 function setStatus(message) {
   status.textContent = message;
+}
+
+function setEngineStatus(engine) {
+  if (!engineStatus) {
+    return;
+  }
+
+  if (engine.running) {
+    engineStatus.textContent = `Moteur RTMP actif${engine.binaryPath ? `: ${engine.binaryPath}` : ""}`;
+    engineStatus.dataset.state = "running";
+    return;
+  }
+
+  engineStatus.textContent = engine.message || "Moteur RTMP indisponible";
+  engineStatus.dataset.state = "offline";
 }
 
 function serializeStreams(streamsText) {
@@ -27,8 +43,13 @@ function renderStreams(streams) {
 }
 
 async function loadConfig() {
-  const response = await fetch("/api/config");
-  const config = await response.json();
+  const [configResponse, engineResponse] = await Promise.all([
+    fetch("/api/config"),
+    fetch("/api/engine"),
+  ]);
+  const config = await configResponse.json();
+  const engine = await engineResponse.json();
+  setEngineStatus(engine);
 
   for (const [key, value] of Object.entries(config)) {
     const input = form.elements.namedItem(key);
@@ -91,4 +112,3 @@ loadConfig().catch((error) => {
   console.error(error);
   setStatus("Impossible de charger la configuration.");
 });
-

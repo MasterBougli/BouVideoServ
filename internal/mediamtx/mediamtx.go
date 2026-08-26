@@ -41,6 +41,13 @@ func (m *Manager) Sync(cfg config.Config) error {
 	return os.WriteFile(filepath.Join(m.workDir, "mediamtx.yml"), []byte(content), 0o644)
 }
 
+func (m *Manager) BinaryPath() string {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+
+	return m.binPath
+}
+
 func (m *Manager) Start(ctx context.Context) error {
 	bin, err := m.resolveBinary()
 	if err != nil {
@@ -134,4 +141,3 @@ paths:
     source: publisher
 `, retention))
 }
-

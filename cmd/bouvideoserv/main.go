@@ -34,9 +34,25 @@ func main() {
 	if err := mediaMgr.Start(context.Background()); err != nil {
 		if err == mediamtx.ErrBinaryNotFound {
 			log.Printf("RTMP engine not started: install MediaMTX or set MEDIAMTX_BIN")
+			state.SetEngineStatus(app.EngineStatus{
+				Running:   false,
+				Message:   "MediaMTX absent",
+				BinaryPath: mediaMgr.BinaryPath(),
+			})
 		} else {
 			log.Printf("RTMP engine start failed: %v", err)
+			state.SetEngineStatus(app.EngineStatus{
+				Running:   false,
+				Message:   "MediaMTX start failed",
+				BinaryPath: mediaMgr.BinaryPath(),
+			})
 		}
+	} else {
+		state.SetEngineStatus(app.EngineStatus{
+			Running:   true,
+			Message:   "MediaMTX started",
+			BinaryPath: mediaMgr.BinaryPath(),
+		})
 	}
 
 	handler := app.NewHandler(state, webDir)
@@ -49,4 +65,3 @@ func main() {
 	log.Printf("BouVideoServ listening on http://%s\n", server.Addr)
 	log.Fatal(server.ListenAndServe())
 }
-
