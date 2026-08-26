@@ -1,39 +1,46 @@
 # BouVideoServ
 
-BouVideoServ est un projet de serveur video local pense pour la reception de flux
-RTMP, la configuration simple depuis une interface web, et une evolution progressive
-vers RTSP, WebRTC puis HLS.
+[Français](README.fr.md) | [Español](README.es.md)
 
-## Vision
+BouVideoServ is a local video server project focused on reliable RTMP intake,
+simple local configuration, and a clean path toward RTSP, WebRTC, and HLS.
 
-- D'abord Windows et Linux
-- V1 centree sur l'ingestion RTMP, la configuration et l'enregistrement
-- Interface web en francais
-- Utilisation sur reseau local uniquement
-- Base evolutive pour plusieurs flux simultanes
+## What this repo provides
 
-## Support
+- a lightweight local web interface
+- a configuration-driven media setup
+- a first release centered on RTMP
+- support for Windows and Linux
+- a public open source workflow with issues and pull requests
 
-Si tu veux soutenir le projet:
+## Current V1 goals
+
+- RTMP ingest only
+- local configuration UI in French
+- at least 3 cameras
+- 30-second cache target
+- 24-hour recording retention
+- local network only
+
+## Core stack
+
+- MediaMTX for media routing
+- Go for the control layer
+- FFmpeg for future processing and recording workflows
+
+## Documentation
+
+- [About](docs/about.md)
+- [Architecture](docs/architecture.md)
+- [V1 RTMP scope](docs/v1-rtmp.md)
+- [RTMP ingest examples](docs/rtmp-ingest.md)
+
+## Support the project
 
 - [Donation Streamlabs](https://streamlabs.com/bouglitv)
 
-## Architecture cible
+## Development note
 
-- Moteur media: MediaMTX
-- Couche de controle: Go
-- Traitements audio/video: FFmpeg
-- Configuration locale: fichiers JSON et interface web
-- Config MediaMTX de base: [mediamtx.yml](mediamtx.yml)
+The repository is structured so we can evolve it step by step without losing
+the simplicity of the first release.
 
-## Roadmap courte
-
-- V1: RTMP uniquement, configuration, cache 30s, enregistrement 24h
-- V2: RTSP
-- V3: WebRTC
-- V4: HLS
-
-## Debut du dev
-
-Le projet est en cours de mise en place. Les premiers ecrans et la base de
-configuration sont ajoutes dans ce depot pour servir de socle a la V1.

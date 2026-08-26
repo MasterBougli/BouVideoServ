@@ -4,6 +4,9 @@ Structure actuelle du depot:
 
 ```text
 BouVideoServ/
+├─ README.md
+├─ README.fr.md
+├─ README.es.md
 ├─ cmd/
 │  └─ bouvideoserv/
 │     └─ main.go
@@ -21,14 +24,19 @@ BouVideoServ/
 │  └─ styles.css
 ├─ docs/
 │  ├─ architecture.md
+│  ├─ about.md
 │  ├─ rtmp-ingest.md
 │  ├─ v1-rtmp.md
 │  └─ tree.md
+├─ scripts/
+│  ├─ scripts/build-linux.sh
+│  ├─ scripts/build-windows.ps1
+│  ├─ scripts/start-linux.sh
+│  └─ scripts/start-windows.ps1
 ├─ CONTRIBUTING.md
 ├─ CODE_OF_CONDUCT.md
 ├─ DCO.md
 ├─ LICENSE
-├─ README.md
 ├─ .gitignore
 └─ go.mod
 ```
