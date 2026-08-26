@@ -1,6 +1,7 @@
 const tiles = document.getElementById("tiles");
 const title = document.querySelector("h1");
 
+// createTile construit une tuile visuelle pour un flux.
 function createTile(name, note) {
   const article = document.createElement("article");
   article.className = "tile";
@@ -16,6 +17,7 @@ function createTile(name, note) {
   return article;
 }
 
+// loadTiles charge la configuration et remplit la vue mosaïque.
 async function loadTiles() {
   const [configResponse, engineResponse] = await Promise.all([
     fetch("/api/config"),
@@ -45,6 +47,9 @@ async function loadTiles() {
   }
 }
 
-loadTiles().catch(() => {
+// handleLoadTilesError affiche un message simple si la mosaique ne charge pas.
+function handleLoadTilesError() {
   tiles.innerHTML = "<p class='status'>Impossible de charger les flux.</p>";
-});
+}
+
+loadTiles().catch(handleLoadTilesError);

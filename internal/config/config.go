@@ -26,6 +26,7 @@ type Stream struct {
 	Enabled   bool   `json:"enabled"`
 }
 
+// Default construit la configuration de base attendue pour la V1.
 func Default() Config {
 	return Config{
 		ProjectName:        "BouVideoServ",
@@ -46,6 +47,7 @@ func Default() Config {
 	}
 }
 
+// ApplyDefaults complete les champs manquants avec les valeurs V1.
 func (c *Config) ApplyDefaults() {
 	if c.ProjectName == "" {
 		c.ProjectName = "BouVideoServ"
@@ -82,6 +84,8 @@ func (c *Config) ApplyDefaults() {
 	}
 }
 
+// Load lit la configuration JSON depuis le disque et applique les valeurs par
+// defaut si besoin.
 func Load(path string) (Config, error) {
 	raw, err := os.ReadFile(path)
 	if err != nil {
@@ -97,6 +101,7 @@ func Load(path string) (Config, error) {
 	return cfg, nil
 }
 
+// Save ecrit la configuration JSON sur le disque.
 func Save(path string, cfg Config) error {
 	cfg.ApplyDefaults()
 
@@ -111,4 +116,3 @@ func Save(path string, cfg Config) error {
 
 	return os.WriteFile(path, append(raw, '\n'), 0o644)
 }
-

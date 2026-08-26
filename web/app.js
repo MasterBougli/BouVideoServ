@@ -6,10 +6,37 @@ const saveButton = document.getElementById("saveConfig");
 const engineStatus = document.getElementById("engineStatus");
 const rtmpSources = document.getElementById("rtmpSources");
 
+// trimLine retire les espaces superflus autour d'une ligne.
+function trimLine(line) {
+  return line.trim();
+}
+
+// isFilledLine indique si une ligne contient vraiment du texte.
+function isFilledLine(line) {
+  return Boolean(line);
+}
+
+// parseStreamLine transforme une ligne texte en definition de flux.
+function parseStreamLine(line) {
+  const [name, sourceUrl = ""] = line.split("|");
+  return {
+    name: name.trim(),
+    sourceUrl: sourceUrl.trim(),
+    enabled: true,
+  };
+}
+
+// formatStreamLine convertit un flux en ligne editable.
+function formatStreamLine(stream) {
+  return `${stream.name} | ${stream.sourceUrl ?? ""}`;
+}
+
+// setStatus met a jour le message visible dans l'interface.
 function setStatus(message) {
   status.textContent = message;
 }
 
+// setEngineStatus affiche l'etat du moteur RTMP dans le panneau de config.
 function setEngineStatus(engine) {
   if (!engineStatus) {
     return;
@@ -25,25 +52,21 @@ function setEngineStatus(engine) {
   engineStatus.dataset.state = "offline";
 }
 
+// serializeStreams transforme le texte de saisie en liste de flux.
 function serializeStreams(streamsText) {
   return streamsText
     .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => {
-      const [name, sourceUrl = ""] = line.split("|");
-      return {
-        name: name.trim(),
-        sourceUrl: sourceUrl.trim(),
-        enabled: true,
-      };
-    });
+    .map(trimLine)
+    .filter(isFilledLine)
+    .map(parseStreamLine);
 }
 
+// renderStreams transforme la liste des flux en texte editable.
 function renderStreams(streams) {
-  return streams.map((stream) => `${stream.name} | ${stream.sourceUrl ?? ""}`).join("\n");
+  return streams.map(formatStreamLine).join("\n");
 }
 
+// renderRtmpSources affiche les URL RTMP locales proposees a l'utilisateur.
 function renderRtmpSources(config) {
   if (!rtmpSources) {
     return;
@@ -62,6 +85,7 @@ function renderRtmpSources(config) {
   }
 }
 
+// loadConfig recupere l'etat serveur puis remplit le formulaire.
 async function loadConfig() {
   const [configResponse, engineResponse] = await Promise.all([
     fetch("/api/config"),
@@ -83,6 +107,7 @@ async function loadConfig() {
   form.elements.namedItem("streams").value = renderStreams(config.streams ?? []);
 }
 
+// saveConfig envoie la configuration courante vers l'API locale.
 async function saveConfig() {
   const payload = {
     projectName: form.elements.namedItem("projectName").value,
@@ -111,17 +136,22 @@ async function saveConfig() {
   }
 }
 
-openDashboard.addEventListener("click", () => {
+// openDashboardWindow ouvre le tableau de bord dans une fenetre dediee.
+function openDashboardWindow() {
   window.open("/dashboard.html", "bouvideoserv-dashboard");
-});
-
-if (openAbout) {
-  openAbout.addEventListener("click", () => {
-    window.open("/about.html", "bouvideoserv-about");
-  });
 }
 
-saveButton.addEventListener("click", async () => {
+if (openAbout) {
+  // openAboutWindow ouvre la page A propos dans une fenetre dediee.
+  function openAboutWindow() {
+    window.open("/about.html", "bouvideoserv-about");
+  }
+
+  openAbout.addEventListener("click", openAboutWindow);
+}
+
+// handleSaveClick enregistre la configuration et affiche le resultat.
+async function handleSaveClick() {
   try {
     saveButton.disabled = true;
     setStatus("Sauvegarde...");
@@ -133,9 +163,14 @@ saveButton.addEventListener("click", async () => {
   } finally {
     saveButton.disabled = false;
   }
-});
+}
 
-loadConfig().catch((error) => {
+// handleLoadError signale un probleme de chargement de la configuration.
+function handleLoadError(error) {
   console.error(error);
   setStatus("Impossible de charger la configuration.");
-});
+}
+
+openDashboard.addEventListener("click", openDashboardWindow);
+saveButton.addEventListener("click", handleSaveClick);
+loadConfig().catch(handleLoadError);

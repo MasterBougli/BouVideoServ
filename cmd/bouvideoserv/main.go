@@ -12,6 +12,8 @@ import (
 	"bouvideoserv/internal/mediamtx"
 )
 
+// main initialise le serveur, synchronise la configuration media et lance
+// l'interface HTTP locale.
 func main() {
 	baseDir := "."
 	configPath := filepath.Join(baseDir, "data", "config.json")

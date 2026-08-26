@@ -2,6 +2,8 @@ package config
 
 import "testing"
 
+// TestDefaultConfig verifie que la configuration de base respecte les attentes
+// de la V1.
 func TestDefaultConfig(t *testing.T) {
 	cfg := Default()
 
@@ -24,4 +26,3 @@ func TestDefaultConfig(t *testing.T) {
 		t.Fatalf("unexpected stream count: %d", len(cfg.Streams))
 	}
 }
-

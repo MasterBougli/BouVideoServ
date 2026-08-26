@@ -2,6 +2,17 @@
 
 All notable changes to BouVideoServ are documented in this file.
 
+## [v0.1.6] - 2026-08-26
+
+### Changed
+
+- added French comments to the main code paths and web scripts
+- version badges and version sections now reflect `v0.1.6`
+
+### Notes
+
+- `v0.1.6` is a documentation-focused maintenance pass for readability.
+
 ## [v0.1.5] - 2026-08-26
 
 ### Added

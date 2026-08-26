@@ -22,6 +22,7 @@ type Manager struct {
 	binPath  string
 }
 
+// NewManager prepare le gestionnaire MediaMTX pour le dossier racine donne.
 func NewManager(baseDir string) *Manager {
 	return &Manager{
 		baseDir: baseDir,
@@ -29,6 +30,7 @@ func NewManager(baseDir string) *Manager {
 	}
 }
 
+// Sync genere le fichier de configuration MediaMTX a partir de la config V1.
 func (m *Manager) Sync(cfg config.Config) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
@@ -41,6 +43,7 @@ func (m *Manager) Sync(cfg config.Config) error {
 	return os.WriteFile(filepath.Join(m.workDir, "mediamtx.yml"), []byte(content), 0o644)
 }
 
+// BinaryPath renvoie le chemin resolve vers le binaire MediaMTX.
 func (m *Manager) BinaryPath() string {
 	m.mu.Lock()
 	defer m.mu.Unlock()
@@ -48,6 +51,7 @@ func (m *Manager) BinaryPath() string {
 	return m.binPath
 }
 
+// Start lance MediaMTX dans le dossier de travail gere par l'application.
 func (m *Manager) Start(ctx context.Context) error {
 	bin, err := m.resolveBinary()
 	if err != nil {
@@ -63,13 +67,18 @@ func (m *Manager) Start(ctx context.Context) error {
 		return err
 	}
 
-	go func() {
-		_ = cmd.Wait()
-	}()
+	// waitForCommand laisse le processus tourner sans bloquer le serveur.
+	go waitForCommand(cmd)
 
 	return nil
 }
 
+// waitForCommand attend la fin du processus lance en arriere-plan.
+func waitForCommand(cmd *exec.Cmd) {
+	_ = cmd.Wait()
+}
+
+// resolveBinary cherche le binaire MediaMTX dans les emplacements connus.
 func (m *Manager) resolveBinary() (string, error) {
 	if m.binPath != "" {
 		return m.binPath, nil
@@ -110,6 +119,7 @@ func (m *Manager) resolveBinary() (string, error) {
 	return "", ErrBinaryNotFound
 }
 
+// GenerateYAML fabrique le fichier de configuration MediaMTX pour la V1.
 func GenerateYAML(cfg config.Config) string {
 	retention := fmt.Sprintf("%dh", cfg.RetentionHours)
 

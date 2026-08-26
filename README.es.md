@@ -2,7 +2,7 @@
 
 [English](README.md) | [Français](README.fr.md)
 
-![Version](https://img.shields.io/badge/version-v0.1.5-31d0aa)
+![Version](https://img.shields.io/badge/version-v0.1.6-31d0aa)
 
 BouVideoServ es un servidor de video local ligero pensado para una ingestion
 RTMP fiable, una configuracion local sencilla y una evolucion gradual hacia
@@ -10,7 +10,7 @@ RTSP, WebRTC y HLS.
 
 ## Version
 
-- Version actual: `v0.1.5`
+- Version actual: `v0.1.6`
 - Estado: simplificacion del README, del wiki y de la estructura de desarrollo
 
 ## Vista rapida

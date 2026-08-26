@@ -7,6 +7,8 @@ import (
 	"bouvideoserv/internal/config"
 )
 
+// TestGenerateYAMLForV1RTMP verifie que le YAML genere active bien la voie
+// RTMP V1 et les regles de retention attendues.
 func TestGenerateYAMLForV1RTMP(t *testing.T) {
 	cfg := config.Default()
 	cfg.RetentionHours = 24
@@ -31,4 +33,3 @@ func TestGenerateYAMLForV1RTMP(t *testing.T) {
 		}
 	}
 }
-
