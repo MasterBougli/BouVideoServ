@@ -2,6 +2,23 @@
 
 All notable changes to BouVideoServ are documented in this file.
 
+## [v0.1.5] - 2026-08-26
+
+### Added
+
+- a `wiki/Quick-Start.md` page for the fastest local setup path
+- a `docs/development.md` guide for future Windows and Linux work
+
+### Changed
+
+- README files now highlight the quick start and development structure
+- wiki navigation now points to the new quick start page
+- version badges and version sections now reflect `v0.1.5`
+
+### Notes
+
+- `v0.1.5` focuses on keeping the public docs clean and easy to navigate.
+
 ## [v0.1.4] - 2026-08-26
 
 ### Added

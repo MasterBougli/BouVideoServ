@@ -2,26 +2,29 @@
 
 [English](README.md) | [Español](README.es.md)
 
-![Version](https://img.shields.io/badge/version-v0.1.4-31d0aa)
+![Version](https://img.shields.io/badge/version-v0.1.5-31d0aa)
 
-BouVideoServ est un projet de serveur video local pense pour une reception
-RTMP fiable, une configuration simple en local, et une evolution progressive
-vers RTSP, WebRTC puis HLS.
+BouVideoServ est un serveur video local leger pense pour une reception RTMP
+fiable, une configuration simple en local, et une evolution progressive vers
+RTSP, WebRTC puis HLS.
 
 ## Version
 
-- Version actuelle: `v0.1.4`
-- Statut: reorganisation des docs, du wiki et des tutos
+- Version actuelle: `v0.1.5`
+- Statut: simplification du README, du wiki et de la structure de developpement
 
-## Ce que fournit ce depot
+## Apercu
 
-- une interface web locale legere
-- une configuration pilotee par fichiers
-- une premiere version centree sur RTMP
-- une compatibilite Windows et Linux
-- un flux open source public avec issues et pull requests
+- reseau local uniquement
+- RTMP en priorite
+- Windows et Linux d'abord
+- interface web de configuration en francais
+- objectif minimum de 3 cameras
+- cache cible a 30 secondes
+- conservation cible de 24 heures
+- flux open source public avec issues et pull requests
 
-## Objectifs de la V1
+## Cible de la V1
 
 - ingestion RTMP uniquement
 - interface de configuration en francais
@@ -43,6 +46,8 @@ vers RTSP, WebRTC puis HLS.
 - [Guide d'installation](tutorials/install.md)
 - [Guide d'utilisation](tutorials/usage.md)
 - [Wiki](wiki/Home.md)
+- [Demarrage rapide](wiki/Quick-Start.md)
+- [Structure de developpement](docs/development.md)
 - [Périmètre V1 RTMP](docs/v1-rtmp.md)
 - [Exemples d'entree RTMP](docs/rtmp-ingest.md)
 - [Changelog](CHANGELOG.md)
