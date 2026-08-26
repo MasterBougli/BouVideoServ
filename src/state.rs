@@ -44,10 +44,7 @@ impl AppState {
 
     // snapshot renvoie une copie de la configuration courante.
     pub fn snapshot(&self) -> Config {
-        self.current
-            .lock()
-            .expect("config mutex poisoned")
-            .clone()
+        self.current.lock().expect("config mutex poisoned").clone()
     }
 
     // listen_address renvoie l'adresse locale definie pour l'interface.

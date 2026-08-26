@@ -1,4 +1,4 @@
-use axum::routing::{get, post};
+use axum::routing::get;
 use axum::Router;
 use std::io;
 use std::path::PathBuf;
@@ -31,7 +31,10 @@ async fn run() -> io::Result<()> {
     ensure_runtime_dirs(base_dir.as_path())?;
 
     let media_manager = Arc::new(MediaTmxManager::new(base_dir.clone()));
-    let state = Arc::new(AppState::new(base_dir.join("data/config.json"), media_manager.clone())?);
+    let state = Arc::new(AppState::new(
+        base_dir.join("data/config.json"),
+        media_manager.clone(),
+    )?);
 
     media_manager.sync(&state.snapshot())?;
 
@@ -76,7 +79,10 @@ async fn run() -> io::Result<()> {
             get(get_config_handler).post(save_config_handler),
         )
         .route("/api/engine", get(get_engine_handler))
-        .nest_service("/", ServeDir::new(web_dir).append_index_html_on_directories(true))
+        .nest_service(
+            "/",
+            ServeDir::new(web_dir).append_index_html_on_directories(true),
+        )
         .with_state(state.clone());
 
     let listener = TcpListener::bind(state.listen_address()).await?;
