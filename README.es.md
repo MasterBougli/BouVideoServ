@@ -6,6 +6,11 @@ BouVideoServ es un proyecto de servidor de video local pensado para una
 ingestion RTMP fiable, una configuracion local sencilla y una evolucion
 gradual hacia RTSP, WebRTC y HLS.
 
+## Version
+
+- Version actual: `v0.1.0`
+- Estado: base publica inicial
+
 ## Lo que ofrece este repositorio
 
 - una interfaz web local ligera
@@ -35,6 +40,7 @@ gradual hacia RTSP, WebRTC y HLS.
 - [Arquitectura](docs/architecture.md)
 - [Alcance V1 RTMP](docs/v1-rtmp.md)
 - [Ejemplos de entrada RTMP](docs/rtmp-ingest.md)
+- [Changelog](CHANGELOG.md)
 
 ## Apoyar el proyecto
 
@@ -44,4 +50,3 @@ gradual hacia RTSP, WebRTC y HLS.
 
 El repositorio esta organizado para evolucionar paso a paso sin perder la
 simplicidad de la primera version.
-

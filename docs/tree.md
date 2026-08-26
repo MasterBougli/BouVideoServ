@@ -4,6 +4,7 @@ Structure actuelle du depot:
 
 ```text
 BouVideoServ/
+├─ CHANGELOG.md
 ├─ README.md
 ├─ README.fr.md
 ├─ README.es.md
