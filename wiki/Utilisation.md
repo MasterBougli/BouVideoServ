@@ -21,6 +21,7 @@ rtmp://127.0.0.1:1935/camera1
 - surveille l'espace disque des enregistrements
 - commence par peu de flux puis ajoute progressivement
 - utilise la page LAN pour verifier l'adresse recommandee
+- utilise la liste des interfaces pour choisir l'IP a partager
 
 ## Support
 

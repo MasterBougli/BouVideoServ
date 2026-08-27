@@ -2,6 +2,24 @@
 
 All notable changes to BouVideoServ are documented in this file.
 
+## [v0.2.4] - 2026-08-27
+
+### Added
+
+- a real list of local network interfaces in the LAN page
+- better host and interface candidates for local sharing
+- a clearer LAN view for Windows and Linux setups
+
+### Changed
+
+- README badges and version sections now reflect `v0.2.4`
+- the LAN profile now exposes actual interface entries from the server
+- the LAN page now shows copyable interface URLs in addition to host hints
+
+### Notes
+
+- `v0.2.4` focuses on making local access easier to share and easier to trust.
+
 ## [v0.2.3] - 2026-08-27
 
 ### Added

@@ -19,6 +19,7 @@ Le wiki sert de guide simple pour:
 - installer le serveur
 - brancher une camera ou OBS
 - retrouver rapidement l'adresse LAN recommandee
+- voir les interfaces locales disponibles
 - demarrer vite en local
 - comprendre le flux de travail V1
 - preparer la future structure Windows et Linux

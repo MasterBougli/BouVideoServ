@@ -10,6 +10,7 @@ live sources.
 - a dedicated camera connection screen for the first setup step
 - a LAN profile page to expose local access links clearly
 - a LAN host detector to help when the machine gets a new local address
+- a real list of local interfaces for Windows and Linux setups
 - a dashboard that refreshes itself so the state stays readable
 - a future-ready base for RTSP, WebRTC, and HLS
 - a project designed for Windows and Linux first

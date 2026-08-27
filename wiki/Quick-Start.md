@@ -47,6 +47,7 @@ rtmp://127.0.0.1:1935/camera1
 - l'etat du moteur RTMP
 - les liens vers les exemples d'entree
 - la detection LAN recommandee pour partager le bon lien
+- la liste des interfaces locales pour partager la bonne adresse
 
 ## Liens utiles
 

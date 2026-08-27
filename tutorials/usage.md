@@ -53,6 +53,9 @@ navigateur et regroupe les liens utiles pour le reseau local.
 Le tableau de bord rafraichit sa mosaïque automatiquement pour garder un
 aperçu vivant des flux.
 
+La page LAN affiche aussi une liste des interfaces locales detectees afin de
+partager plus facilement la bonne adresse.
+
 ## Conservation
 
 - Cache cible: 30 secondes

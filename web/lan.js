@@ -5,6 +5,7 @@ const lanRecommendation = document.getElementById("lanRecommendation");
 const copyLanOrigin = document.getElementById("copyLanOrigin");
 const lanCandidates = document.getElementById("lanCandidates");
 const lanLinks = document.getElementById("lanLinks");
+const lanInterfaces = document.getElementById("lanInterfaces");
 const lanSteps = document.getElementById("lanSteps");
 
 // escapeHtml protege les contenus injectes dans la page LAN.
@@ -89,6 +90,33 @@ function renderCandidates(profile) {
       </div>
     `;
     lanCandidates.appendChild(item);
+  }
+}
+
+// renderInterfaces affiche les interfaces locales detectees par le serveur.
+function renderInterfaces(profile) {
+  if (!lanInterfaces) {
+    return;
+  }
+
+  lanInterfaces.innerHTML = "";
+
+  for (const item of profile.interfaces ?? []) {
+    const li = document.createElement("li");
+    li.className = "lan-interface";
+    li.dataset.recommended = String(Boolean(item.recommended));
+    li.innerHTML = `
+      <div class="lan-interface__head">
+        <strong>${escapeHtml(item.name)}</strong>
+        <span class="lan-interface__badge">${item.recommended ? "Recommandee" : "Disponible"}</span>
+      </div>
+      <code>${escapeHtml(item.address)}</code>
+      <p class="lan-note">${escapeHtml(item.note)}</p>
+      <div class="lan-copy-row">
+        <button type="button" class="copy-button" data-copy-value="${escapeHtml(item.origin)}">Copier l'URL</button>
+      </div>
+    `;
+    lanInterfaces.appendChild(li);
   }
 }
 
@@ -222,6 +250,7 @@ async function loadLanProfile() {
 
   renderHostCard(profile);
   renderCandidates(profile);
+  renderInterfaces(profile);
   renderLinks(profile);
   renderSteps(profile);
   setLanStatus(profile, engine);

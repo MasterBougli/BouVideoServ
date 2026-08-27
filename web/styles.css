@@ -824,6 +824,52 @@ textarea {
   margin-top: 0;
 }
 
+.lan-interface-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.lan-interface {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: rgba(7, 17, 29, 0.72);
+}
+
+.lan-interface[data-recommended="true"] {
+  border-color: rgba(49, 208, 170, 0.34);
+  background: rgba(49, 208, 170, 0.08);
+}
+
+.lan-interface__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.lan-interface__badge {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.lan-interface[data-recommended="true"] .lan-interface__badge {
+  color: var(--accent);
+  border-color: rgba(49, 208, 170, 0.28);
+}
+
 .tile-body p {
   margin-bottom: 0;
 }
@@ -930,6 +976,7 @@ textarea {
   .summary-grid,
   .camera-grid,
   .lan-grid,
+  .lan-interface-list,
   .tiles,
   .about-grid {
     grid-template-columns: 1fr;

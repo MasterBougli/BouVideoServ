@@ -8,6 +8,7 @@ use serde_json::json;
 use std::io;
 use std::net::{IpAddr, UdpSocket};
 use std::path::{Path, PathBuf};
+use std::process::Command;
 use std::sync::{Arc, Mutex};
 
 #[derive(Clone)]
@@ -77,6 +78,16 @@ pub struct LanHostCandidate {
 
 #[derive(Clone, Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
+pub struct LanInterface {
+    pub name: String,
+    pub address: String,
+    pub origin: String,
+    pub recommended: bool,
+    pub note: String,
+}
+
+#[derive(Clone, Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct LanProfile {
     pub listen_address: String,
     pub configured_host: String,
@@ -86,6 +97,7 @@ pub struct LanProfile {
     pub recommended_origin: String,
     pub camera_plan: CameraPlan,
     pub host_candidates: Vec<LanHostCandidate>,
+    pub interfaces: Vec<LanInterface>,
     pub notes: Vec<String>,
 }
 
@@ -243,6 +255,7 @@ impl AppState {
         let detected_origin = format!("http://{}:{}", detected_host, port);
         let recommended_origin = format!("http://{}:{}", recommended_host, port);
         let camera_plan = self.camera_plan();
+        let interfaces = self.collect_local_interfaces(&recommended_host, &port);
         let mut host_candidates = Vec::new();
 
         self.push_host_candidate(
@@ -291,6 +304,7 @@ impl AppState {
             recommended_origin,
             camera_plan,
             host_candidates,
+            interfaces,
             notes,
         }
     }
@@ -403,6 +417,152 @@ impl AppState {
             note: note.to_string(),
         });
     }
+
+    fn collect_local_interfaces(&self, recommended_host: &str, port: &str) -> Vec<LanInterface> {
+        let mut interfaces = if cfg!(windows) {
+            self.collect_windows_interfaces(recommended_host, port)
+        } else {
+            self.collect_unix_interfaces(recommended_host, port)
+        };
+
+        if !interfaces.iter().any(|entry| entry.address == "127.0.0.1") {
+            interfaces.push(LanInterface {
+                name: "Loopback".to_string(),
+                address: "127.0.0.1".to_string(),
+                origin: format!("http://127.0.0.1:{}", port),
+                recommended: recommended_host == "127.0.0.1",
+                note: "Toujours disponible en local.".to_string(),
+            });
+        }
+
+        interfaces.sort_by(|left, right| left.name.cmp(&right.name));
+        interfaces.dedup_by(|left, right| left.address == right.address);
+        interfaces
+    }
+
+    fn collect_windows_interfaces(&self, recommended_host: &str, port: &str) -> Vec<LanInterface> {
+        let output = Command::new("ipconfig").output();
+        let mut interfaces = Vec::new();
+        let Ok(output) = output else {
+            return interfaces;
+        };
+
+        let text = String::from_utf8_lossy(&output.stdout);
+        let mut current_name = String::from("Interface");
+
+        for line in text.lines() {
+            let trimmed = line.trim();
+            if trimmed.is_empty() {
+                continue;
+            }
+
+            if !line.starts_with(' ') && trimmed.ends_with(':') {
+                let header = trimmed.trim_end_matches(':').trim();
+                if !header.is_empty() {
+                    current_name = header.to_string();
+                }
+                continue;
+            }
+
+            if trimmed.contains("IPv4") {
+                if let Some(address) = extract_ipv4(trimmed) {
+                    if address == "127.0.0.1" {
+                        continue;
+                    }
+
+                    interfaces.push(LanInterface {
+                        name: current_name.clone(),
+                        origin: format!("http://{}:{}", address, port),
+                        recommended: address == recommended_host,
+                        note: "Adresse IPv4 detectee via ipconfig.".to_string(),
+                        address,
+                    });
+                }
+            }
+        }
+
+        interfaces
+    }
+
+    fn collect_unix_interfaces(&self, recommended_host: &str, port: &str) -> Vec<LanInterface> {
+        let output = Command::new("ip")
+            .args(["-o", "-4", "addr", "show", "scope", "global"])
+            .output();
+        let mut interfaces = Vec::new();
+
+        if let Ok(output) = output {
+            let text = String::from_utf8_lossy(&output.stdout);
+            for line in text.lines() {
+                let parts: Vec<&str> = line.split_whitespace().collect();
+                if parts.len() < 4 {
+                    continue;
+                }
+
+                let name = parts[1].trim_end_matches(':');
+                let address = parts[3].split('/').next().unwrap_or("").trim();
+                if !is_ipv4_address(address) || address == "127.0.0.1" {
+                    continue;
+                }
+
+                interfaces.push(LanInterface {
+                    name: name.to_string(),
+                    address: address.to_string(),
+                    origin: format!("http://{}:{}", address, port),
+                    recommended: address == recommended_host,
+                    note: "Adresse IPv4 detectee via ip addr.".to_string(),
+                });
+            }
+        }
+
+        if interfaces.is_empty() {
+            let fallback = Command::new("hostname").arg("-I").output();
+            if let Ok(output) = fallback {
+                let text = String::from_utf8_lossy(&output.stdout);
+                for token in text.split_whitespace() {
+                    let address = token.trim();
+                    if !is_ipv4_address(address) || address == "127.0.0.1" {
+                        continue;
+                    }
+
+                    interfaces.push(LanInterface {
+                        name: "Adresse locale".to_string(),
+                        address: address.to_string(),
+                        origin: format!("http://{}:{}", address, port),
+                        recommended: address == recommended_host,
+                        note: "Adresse IPv4 detectee via hostname -I.".to_string(),
+                    });
+                }
+            }
+        }
+
+        interfaces
+    }
+}
+
+fn extract_ipv4(text: &str) -> Option<String> {
+    text.split(|character: char| !character.is_ascii_alphanumeric() && character != '.')
+        .filter(|part| !part.is_empty())
+        .find_map(|part| {
+            if is_ipv4_address(part) {
+                Some(part.to_string())
+            } else {
+                None
+            }
+        })
+}
+
+fn is_ipv4_address(address: &str) -> bool {
+    let mut octets = address.split('.');
+    for _ in 0..4 {
+        let Some(part) = octets.next() else {
+            return false;
+        };
+        if part.is_empty() || part.parse::<u8>().is_err() {
+            return false;
+        }
+    }
+
+    octets.next().is_none()
 }
 
 // health_handler renvoie un etat minimal pour les verifications de base.
