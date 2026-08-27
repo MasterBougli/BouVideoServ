@@ -20,6 +20,7 @@ rtmp://127.0.0.1:1935/camera1
 - utilise les cartes camera une par une pour rester lisible
 - surveille l'espace disque des enregistrements
 - commence par peu de flux puis ajoute progressivement
+- utilise la page LAN pour verifier l'adresse recommandee
 
 ## Support
 

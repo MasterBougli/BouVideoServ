@@ -6,6 +6,7 @@ use axum::Json;
 use serde::Serialize;
 use serde_json::json;
 use std::io;
+use std::net::{IpAddr, UdpSocket};
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 
@@ -61,6 +62,30 @@ pub struct CameraPlan {
     pub minimum_camera_count: u32,
     pub configured_streams: usize,
     pub cameras: Vec<CameraSlot>,
+    pub notes: Vec<String>,
+}
+
+#[derive(Clone, Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct LanHostCandidate {
+    pub label: String,
+    pub host: String,
+    pub origin: String,
+    pub recommended: bool,
+    pub note: String,
+}
+
+#[derive(Clone, Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct LanProfile {
+    pub listen_address: String,
+    pub configured_host: String,
+    pub configured_origin: String,
+    pub detected_host: String,
+    pub detected_origin: String,
+    pub recommended_origin: String,
+    pub camera_plan: CameraPlan,
+    pub host_candidates: Vec<LanHostCandidate>,
     pub notes: Vec<String>,
 }
 
@@ -156,7 +181,7 @@ impl AppState {
             .minimum_camera_count
             .max(current.streams.len() as u32)
             .max(3);
-        let host = self.listen_host_hint();
+        let host = self.share_host_hint();
         let mut cameras = Vec::with_capacity(camera_count as usize);
 
         for index in 0..camera_count {
@@ -204,6 +229,72 @@ impl AppState {
         }
     }
 
+    // lan_profile construit une vue LAN plus detaillee avec les adresses
+    // locales detectees et les liens utiles.
+    pub fn lan_profile(&self) -> LanProfile {
+        let listen_address = self.listen_address();
+        let configured_host = self.configured_host_hint();
+        let port = self.listen_port_hint();
+        let detected_host = self
+            .detect_local_host()
+            .unwrap_or_else(|| configured_host.clone());
+        let recommended_host = self.recommended_host(&configured_host, &detected_host);
+        let configured_origin = format!("http://{}:{}", configured_host, port);
+        let detected_origin = format!("http://{}:{}", detected_host, port);
+        let recommended_origin = format!("http://{}:{}", recommended_host, port);
+        let camera_plan = self.camera_plan();
+        let mut host_candidates = Vec::new();
+
+        self.push_host_candidate(
+            &mut host_candidates,
+            "Adresse configuree",
+            &configured_host,
+            &configured_origin,
+            recommended_host == configured_host,
+            "Valeur definie dans listenAddress.",
+        );
+        self.push_host_candidate(
+            &mut host_candidates,
+            "Adresse detectee",
+            &detected_host,
+            &detected_origin,
+            recommended_host == detected_host,
+            "Adresse locale la plus probable sur le reseau.",
+        );
+        self.push_host_candidate(
+            &mut host_candidates,
+            "Fallback local",
+            "127.0.0.1",
+            &format!("http://127.0.0.1:{}", port),
+            recommended_host == "127.0.0.1",
+            "Toujours disponible en local.",
+        );
+
+        let mut notes = vec![
+            format!("Le serveur ecoute sur {}.", listen_address),
+            "La detection reseau aide quand la machine change d'adresse LAN.".to_string(),
+        ];
+
+        if self.is_loopback_host(&configured_host) {
+            notes.push(
+                "La configuration actuelle reste en local; change listenAddress pour partager sur le reseau."
+                    .to_string(),
+            );
+        }
+
+        LanProfile {
+            listen_address,
+            configured_host,
+            configured_origin,
+            detected_host,
+            detected_origin,
+            recommended_origin,
+            camera_plan,
+            host_candidates,
+            notes,
+        }
+    }
+
     fn listen_host_hint(&self) -> String {
         let current = self.snapshot();
         let address = current.listen_address.trim();
@@ -212,11 +303,105 @@ impl AppState {
             .map(|(host, _)| host)
             .unwrap_or(address);
 
-        if host.is_empty() || host == "0.0.0.0" || host == "::" {
+        if host.is_empty() {
             "127.0.0.1".to_string()
         } else {
             host.to_string()
         }
+    }
+
+    fn configured_host_hint(&self) -> String {
+        self.listen_host_hint()
+    }
+
+    fn listen_port_hint(&self) -> String {
+        let current = self.snapshot();
+        let address = current.listen_address.trim();
+        address
+            .rsplit_once(':')
+            .map(|(_, port)| port)
+            .filter(|port| !port.is_empty())
+            .unwrap_or("8080")
+            .to_string()
+    }
+
+    fn recommended_host(&self, configured_host: &str, detected_host: &str) -> String {
+        if self.is_wildcard_host(configured_host) {
+            if detected_host.is_empty() {
+                "127.0.0.1".to_string()
+            } else {
+                detected_host.to_string()
+            }
+        } else {
+            configured_host.to_string()
+        }
+    }
+
+    fn share_host_hint(&self) -> String {
+        let configured_host = self.configured_host_hint();
+        let detected_host = self.detect_local_host().unwrap_or_default();
+        self.recommended_host(&configured_host, &detected_host)
+    }
+
+    fn is_wildcard_host(&self, host: &str) -> bool {
+        matches!(host, "" | "0.0.0.0" | "::")
+    }
+
+    fn is_loopback_host(&self, host: &str) -> bool {
+        matches!(host, "127.0.0.1" | "localhost" | "::1")
+    }
+
+    fn detect_local_host(&self) -> Option<String> {
+        let probes = [
+            "1.1.1.1:80",
+            "8.8.8.8:80",
+            "192.168.1.1:80",
+            "192.168.0.1:80",
+            "10.0.0.1:80",
+            "172.16.0.1:80",
+        ];
+
+        for probe in probes {
+            let socket = match UdpSocket::bind("0.0.0.0:0") {
+                Ok(socket) => socket,
+                Err(_) => continue,
+            };
+            if socket.connect(probe).is_err() {
+                continue;
+            }
+
+            if let Ok(address) = socket.local_addr() {
+                match address.ip() {
+                    IpAddr::V4(ip) if !ip.is_loopback() => return Some(ip.to_string()),
+                    IpAddr::V6(ip) if !ip.is_loopback() => return Some(ip.to_string()),
+                    _ => {}
+                }
+            }
+        }
+
+        None
+    }
+
+    fn push_host_candidate(
+        &self,
+        candidates: &mut Vec<LanHostCandidate>,
+        label: &str,
+        host: &str,
+        origin: &str,
+        recommended: bool,
+        note: &str,
+    ) {
+        if candidates.iter().any(|candidate| candidate.host == host) {
+            return;
+        }
+
+        candidates.push(LanHostCandidate {
+            label: label.to_string(),
+            host: host.to_string(),
+            origin: origin.to_string(),
+            recommended,
+            note: note.to_string(),
+        });
     }
 }
 
@@ -244,6 +429,11 @@ pub async fn get_config_summary_handler(State(state): State<Arc<AppState>>) -> J
 // get_camera_plan_handler renvoie le plan de connexion des cameras RTMP.
 pub async fn get_camera_plan_handler(State(state): State<Arc<AppState>>) -> Json<CameraPlan> {
     Json(state.camera_plan())
+}
+
+// get_lan_profile_handler renvoie les informations LAN et les adresses utiles.
+pub async fn get_lan_profile_handler(State(state): State<Arc<AppState>>) -> Json<LanProfile> {
+    Json(state.lan_profile())
 }
 
 // save_config_handler enregistre la configuration envoyee par l'interface.

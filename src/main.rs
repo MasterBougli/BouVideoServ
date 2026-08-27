@@ -11,7 +11,7 @@ use tracing_subscriber::EnvFilter;
 use bouvideoserv::mediamtx::{MediaTmxError, MediaTmxManager};
 use bouvideoserv::state::{
     get_camera_plan_handler, get_config_handler, get_config_summary_handler, get_engine_handler,
-    health_handler, save_config_handler, AppState, EngineStatus,
+    get_lan_profile_handler, health_handler, save_config_handler, AppState, EngineStatus,
 };
 
 // main lance la couche serveur Rust et les services locaux autour de MediaMTX.
@@ -80,6 +80,7 @@ async fn run() -> io::Result<()> {
         )
         .route("/api/config-summary", get(get_config_summary_handler))
         .route("/api/camera-plan", get(get_camera_plan_handler))
+        .route("/api/lan-profile", get(get_lan_profile_handler))
         .route("/api/engine", get(get_engine_handler))
         .nest_service(
             "/",

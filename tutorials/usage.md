@@ -14,6 +14,7 @@ Tu verras:
 - le bouton pour ouvrir le tableau de bord
 - le bouton pour ouvrir l'ecran de connexion camera
 - le bouton pour ouvrir le profil LAN
+- le tableau de bord qui se met a jour automatiquement
 
 ## Configurer une camera
 
@@ -48,6 +49,9 @@ dans OBS ou dans un encodeur externe.
 
 Le bouton `Profil LAN` ouvre une page qui detecte l'adresse vue par le
 navigateur et regroupe les liens utiles pour le reseau local.
+
+Le tableau de bord rafraichit sa mosaïque automatiquement pour garder un
+aperçu vivant des flux.
 
 ## Conservation
 

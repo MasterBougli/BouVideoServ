@@ -710,6 +710,10 @@ textarea {
   margin: 0;
 }
 
+.dashboard-meta .muted + .muted {
+  color: var(--accent);
+}
+
 .lan-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -767,8 +771,73 @@ textarea {
   margin-top: 0;
 }
 
+.lan-candidate-list {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 0;
+  display: grid;
+  gap: 10px;
+}
+
+.lan-candidate {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: rgba(7, 17, 29, 0.72);
+}
+
+.lan-candidate[data-recommended="true"] {
+  border-color: rgba(49, 208, 170, 0.34);
+  background: rgba(49, 208, 170, 0.08);
+}
+
+.lan-candidate__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.lan-candidate__badge {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.lan-candidate[data-recommended="true"] .lan-candidate__badge {
+  color: var(--accent);
+  border-color: rgba(49, 208, 170, 0.28);
+}
+
+.lan-candidate code {
+  overflow-wrap: anywhere;
+}
+
+.lan-candidate .lan-note {
+  margin-top: 0;
+}
+
 .tile-body p {
   margin-bottom: 0;
+}
+
+.tile--live .tile-preview::after {
+  content: "";
+  position: absolute;
+  inset: 14px 14px auto auto;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgba(49, 208, 170, 0.42);
+  animation: tilePulse 1.8s ease-in-out infinite;
 }
 
 .about-grid {
@@ -800,6 +869,21 @@ textarea {
 
 .muted {
   font-size: 0.94rem;
+}
+
+@keyframes tilePulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(49, 208, 170, 0.42);
+    transform: scale(1);
+  }
+  70% {
+    box-shadow: 0 0 0 14px rgba(49, 208, 170, 0);
+    transform: scale(1.06);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(49, 208, 170, 0);
+    transform: scale(1);
+  }
 }
 
 @media (max-width: 980px) {

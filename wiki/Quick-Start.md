@@ -46,6 +46,7 @@ rtmp://127.0.0.1:1935/camera1
 - le bouton pour ouvrir le profil LAN
 - l'etat du moteur RTMP
 - les liens vers les exemples d'entree
+- la detection LAN recommandee pour partager le bon lien
 
 ## Liens utiles
 

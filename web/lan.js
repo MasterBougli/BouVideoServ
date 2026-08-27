@@ -1,7 +1,9 @@
 const lanStatus = document.getElementById("lanStatus");
 const lanHost = document.getElementById("lanHost");
 const lanOrigin = document.getElementById("lanOrigin");
+const lanRecommendation = document.getElementById("lanRecommendation");
 const copyLanOrigin = document.getElementById("copyLanOrigin");
+const lanCandidates = document.getElementById("lanCandidates");
 const lanLinks = document.getElementById("lanLinks");
 const lanSteps = document.getElementById("lanSteps");
 
@@ -27,38 +29,71 @@ async function copyToClipboard(value) {
 }
 
 // setLanStatus affiche un resume court de l'adresse locale detectee.
-function setLanStatus(summary, engine) {
+function setLanStatus(profile, engine) {
   if (!lanStatus) {
     return;
   }
 
-  const host = window.location.hostname || summary.listenAddress.split(":")[0] || "127.0.0.1";
   const stateLabel = engine.running ? "moteur actif" : "moteur en attente";
-  lanStatus.textContent = `Adresse vue: ${host}, ${stateLabel}`;
+  lanStatus.textContent = `Adresse recommandee: ${profile.recommendedOrigin}, ${stateLabel}`;
   lanStatus.dataset.state = engine.running ? "running" : "offline";
 }
 
 // renderHostCard affiche l'adresse locale a partager.
-function renderHostCard(summary) {
-  const host = window.location.hostname || summary.listenAddress.split(":")[0] || "127.0.0.1";
-  const port = summary.listenAddress.split(":")[1] || "8080";
-  const origin = window.location.origin && window.location.origin !== "null"
-    ? window.location.origin
-    : `http://${host}:${port}`;
-
+function renderHostCard(profile) {
   if (lanHost) {
-    lanHost.textContent = `Hote detecte: ${host}`;
+    lanHost.textContent = `Hote detecte: ${profile.detectedHost}`;
   }
 
   if (lanOrigin) {
-    lanOrigin.textContent = origin;
+    lanOrigin.textContent = profile.recommendedOrigin;
   }
 
-  return { host, origin, port };
+  if (lanRecommendation) {
+    const notes = [
+      `Configuree: ${profile.configuredOrigin}`,
+      `Detectee: ${profile.detectedOrigin}`,
+    ];
+
+    if (profile.recommendedOrigin === profile.configuredOrigin) {
+      notes.push("L'adresse configuree est la plus fiable pour le partage.");
+    } else {
+      notes.push("L'adresse detectee est recommandee pour le reseau local.");
+    }
+
+    lanRecommendation.textContent = notes.join(" - ");
+  }
+}
+
+// renderCandidates affiche les differentes adresses detectees.
+function renderCandidates(profile) {
+  if (!lanCandidates) {
+    return;
+  }
+
+  lanCandidates.innerHTML = "";
+
+  for (const candidate of profile.hostCandidates ?? []) {
+    const item = document.createElement("li");
+    item.className = "lan-candidate";
+    item.dataset.recommended = String(Boolean(candidate.recommended));
+    item.innerHTML = `
+      <div class="lan-candidate__head">
+        <strong>${escapeHtml(candidate.label)}</strong>
+        <span class="lan-candidate__badge">${candidate.recommended ? "Recommandee" : "Alternative"}</span>
+      </div>
+      <code>${escapeHtml(candidate.origin)}</code>
+      <p class="lan-note">${escapeHtml(candidate.note)}</p>
+      <div class="lan-copy-row">
+        <button type="button" class="copy-button" data-copy-value="${escapeHtml(candidate.origin)}">Copier</button>
+      </div>
+    `;
+    lanCandidates.appendChild(item);
+  }
 }
 
 // renderLinks construit les liens LAN principaux et les URLs camera.
-function renderLinks(origin, plan) {
+function renderLinks(profile) {
   if (!lanLinks) {
     return;
   }
@@ -66,22 +101,27 @@ function renderLinks(origin, plan) {
   const items = [
     {
       label: "Interface web",
-      value: `${origin}/`,
+      value: `${profile.recommendedOrigin}/`,
       note: "Page de configuration principale.",
     },
     {
       label: "Tableau de bord",
-      value: `${origin}/dashboard.html`,
+      value: `${profile.recommendedOrigin}/dashboard.html`,
       note: "Mosaïque légère des flux.",
     },
     {
       label: "Connexion camera",
-      value: `${origin}/camera.html`,
+      value: `${profile.recommendedOrigin}/camera.html`,
       note: "URLs RTMP prêtes a copier dans OBS.",
+    },
+    {
+      label: "Profil LAN",
+      value: `${profile.recommendedOrigin}/lan.html`,
+      note: "Vue de partage des adresses locales.",
     },
   ];
 
-  for (const camera of plan.cameras.slice(0, 3)) {
+  for (const camera of profile.cameraPlan?.cameras?.slice(0, 3) ?? []) {
     items.push({
       label: camera.name,
       value: camera.rtmpUrl,
@@ -106,17 +146,17 @@ function renderLinks(origin, plan) {
 }
 
 // renderSteps affiche un mini guide d'utilisation LAN.
-function renderSteps(summary, plan) {
+function renderSteps(profile) {
   if (!lanSteps) {
     return;
   }
 
   const steps = [
-    `Ouvre ${window.location.origin || "la page LAN"} depuis un appareil du reseau local.`,
-    `Copie l'adresse web pour ouvrir l'interface sur ${summary.listenAddress}.`,
-    `Choisis une camera dans la liste et colle son URL RTMP dans OBS.`,
-    `Utilise la cle de flux correspondante pour demarrer la diffusion.`,
-    `Garde cette page ouverte pour retrouver rapidement les liens principaux.`,
+    `Ouvre ${profile.recommendedOrigin} depuis un appareil du reseau local.`,
+    `Si besoin, teste ensuite ${profile.configuredOrigin} pour verifier la configuration actuelle.`,
+    "Copie les URLs RTMP des cameras depuis la page Connexion camera.",
+    "Ajoute les cameras dans OBS ou dans un encodeur externe.",
+    "Garde cette page ouverte pour retrouver rapidement les liens principaux.",
   ];
 
   lanSteps.innerHTML = "";
@@ -127,9 +167,9 @@ function renderSteps(summary, plan) {
     lanSteps.appendChild(li);
   });
 
-  if (plan.cameras.length === 0) {
+  for (const note of profile.notes ?? []) {
     const li = document.createElement("li");
-    li.textContent = "Aucune camera configuree pour le moment.";
+    li.textContent = note;
     lanSteps.appendChild(li);
   }
 }
@@ -172,20 +212,19 @@ async function handleCopyClick(event) {
 
 // loadLanProfile recupere la configuration et affiche le profil LAN.
 async function loadLanProfile() {
-  const [summaryResponse, engineResponse, planResponse] = await Promise.all([
-    fetch("/api/config-summary"),
+  const [profileResponse, engineResponse] = await Promise.all([
+    fetch("/api/lan-profile"),
     fetch("/api/engine"),
-    fetch("/api/camera-plan"),
   ]);
 
-  const summary = await summaryResponse.json();
+  const profile = await profileResponse.json();
   const engine = await engineResponse.json();
-  const plan = await planResponse.json();
-  const { origin } = renderHostCard(summary);
 
-  setLanStatus(summary, engine);
-  renderLinks(origin, plan);
-  renderSteps(summary, plan);
+  renderHostCard(profile);
+  renderCandidates(profile);
+  renderLinks(profile);
+  renderSteps(profile);
+  setLanStatus(profile, engine);
 }
 
 // handleLanLoadError signale un probleme de chargement du profil LAN.
@@ -199,6 +238,10 @@ function handleLanLoadError(error) {
 
 if (lanLinks) {
   lanLinks.addEventListener("click", handleCopyClick);
+}
+
+if (lanCandidates) {
+  lanCandidates.addEventListener("click", handleCopyClick);
 }
 
 if (copyLanOrigin) {
